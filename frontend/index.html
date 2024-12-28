@@ -329,6 +329,7 @@
                 if (response.ok) {
                     alert('Score submitted successfully!');
                     document.getElementById('scoreModal').style.display = 'none';
+                    document.getElementById('timer').innerText = 'Time: 0:00';
                     game = new Minesweeper();
                 } else {
                     throw new Error('Failed to submit score');
