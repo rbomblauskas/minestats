@@ -1,6 +1,6 @@
 # Minestats
 
-This module analyses Minesweeper matches saved in CSV format, and generates `leaderboard.html` and `matches.html`
+This module analyses Minesweeper matches saved in CSV format, and generates `leaderboard.html`.
 
 ## Installation and Usage Instructions
 
