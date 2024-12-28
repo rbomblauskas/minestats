@@ -2,12 +2,6 @@
 
 This module analyses Minesweeper matches saved in CSV format, and generates `leaderboard.html` and `matches.html`
 
-## Module Overview
-
-- **Data Analysis:** A C module generates HTML files containing a leaderboard and match history.
-- **File Viewing:** The generated HTML files can be opened in a web browser (or hosted on an HTTP server)
-
-
 ## Installation and Usage Instructions
 
 ### System Requirements
