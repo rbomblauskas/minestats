@@ -1,6 +1,7 @@
 # Minestats
 
 This module analyses Minesweeper matches saved in CSV format, and generates `leaderboard.html`.
+Test it here: http://rokoserveris.gw.lt/
 
 ## Installation and Usage Instructions
 
