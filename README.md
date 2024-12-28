@@ -34,7 +34,7 @@ This will compile an executable file (./gen).
 
 ### Usage
 
-To generate the `leaderboard.html` file, simply run:
+To generate the `leaderboard.html` file, simply run (in module directory):
 ```bash
 ./gen matches.csv ../frontend/leaderboard.html
 ```
