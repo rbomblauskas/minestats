@@ -70,7 +70,7 @@ void write_leaderboard_html_body(FILE *html_file)
     fprintf(html_file, "        <ul class=\"navbar-links\">\n");
     fprintf(html_file, "            <li><a href=\"/\">Play</a></li>\n");
     fprintf(html_file, "            <li><a href=\"/leaderboard.html\">Leaderboard</a></li>\n");
-    //fprintf(html_file, "            <li><a href=\"/matches.html\">Matches</a></li>\n");
+    // fprintf(html_file, "            <li><a href=\"/matches.html\">Matches</a></li>\n");
     fprintf(html_file, "        </ul>\n");
     fprintf(html_file, "    </nav>\n");
     fprintf(html_file, "    <div class=\"leaderboard-container\">\n");
@@ -100,7 +100,14 @@ void write_player_data(FILE *html_file, int rank, PlayerStats *player)
     fprintf(html_file, "                    <tr>\n");
     fprintf(html_file, "                        <td><span class=\"rank\">%d</span></td>\n", rank);
     fprintf(html_file, "                        <td class=\"ip-address\">%s</td>\n", player->ipAddress);
-    fprintf(html_file, "                        <td>%ds</td>\n", player->elapsedSeconds);
+    if (player->gamesWon == 0)
+    {
+        fprintf(html_file, "                        <td>No data</td>\n");
+    }
+    else
+    {
+        fprintf(html_file, "                        <td>%ds</td>\n", player->elapsedSeconds);
+    }
     fprintf(html_file, "                        <td>%d</td>\n", player->gamesWon);
     fprintf(html_file, "                        <td>%.1f%%</td>\n", player->winRate);
     fprintf(html_file, "                        <td>%s</td>\n", escaped_timestamp);
