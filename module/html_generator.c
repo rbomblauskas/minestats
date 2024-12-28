@@ -70,7 +70,7 @@ void write_leaderboard_html_body(FILE *html_file)
     fprintf(html_file, "        <ul class=\"navbar-links\">\n");
     fprintf(html_file, "            <li><a href=\"/\">Play</a></li>\n");
     fprintf(html_file, "            <li><a href=\"/leaderboard.html\">Leaderboard</a></li>\n");
-    fprintf(html_file, "            <li><a href=\"/matches.html\">Matches</a></li>\n");
+    //fprintf(html_file, "            <li><a href=\"/matches.html\">Matches</a></li>\n");
     fprintf(html_file, "        </ul>\n");
     fprintf(html_file, "    </nav>\n");
     fprintf(html_file, "    <div class=\"leaderboard-container\">\n");
