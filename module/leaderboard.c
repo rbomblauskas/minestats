@@ -16,7 +16,7 @@ void update_player_stats(const char *ipAddress, int elapsedSeconds, const char *
             {
                 leaderboard.players[i].elapsedSeconds = elapsedSeconds;
             }
-            leaderboard.players[i].gamesWon += tempMatch->gameWon ? 1 : 0;
+            leaderboard.players[i].gamesWon += gameWon ? 1 : 0;
             leaderboard.players[i].gamesPlayed++;
             leaderboard.players[i].winRate = ((float)leaderboard.players[i].gamesWon / leaderboard.players[i].gamesPlayed) * 100.0f;
             strcpy(leaderboard.players[i].lastPlayed, timestamp);
@@ -29,8 +29,8 @@ void update_player_stats(const char *ipAddress, int elapsedSeconds, const char *
     {
         int i = leaderboard.playerCount;
         strcpy(leaderboard.players[i].ipAddress, ipAddress);
-        leaderboard.players[i].elapsedSeconds = 1000000000;
-        leaderboard.players[i].gamesWon = tempMatch->gameWon ? 1 : 0;
+        leaderboard.players[i].elapsedSeconds = gameWon ? elapsedSeconds : 1000000000;
+        leaderboard.players[i].gamesWon = gameWon ? 1 : 0;
         leaderboard.players[i].gamesPlayed = 1;
         leaderboard.players[i].winRate = leaderboard.players[i].gamesWon * 100.0f;
         strcpy(leaderboard.players[i].lastPlayed, timestamp);
