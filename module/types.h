@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #define MAX_IP_LENGTH 16
-#define BOARD_SIZE 9
+#define BOARD_SIZE 81
 #define MAX_PLAYERS 1000
 #define FIELD_NUM 250
 
