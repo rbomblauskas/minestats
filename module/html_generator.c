@@ -18,33 +18,33 @@ char *escape_html(const char *input)
     }
 
     size_t j = 0;
-    for (size_t i = 0; input[i] != '\0'; i++)
+    for (size_t i = 0; input[i] != '\0'; ++i)
     {
         switch (input[i])
         {
-        case '&':
-            strcpy(&output[j], "&amp;");
-            j += 5;
-            break;
-        case '<':
-            strcpy(&output[j], "&lt;");
-            j += 4;
-            break;
-        case '>':
-            strcpy(&output[j], "&gt;");
-            j += 4;
-            break;
-        case '"':
-            strcpy(&output[j], "&quot;");
-            j += 6;
-            break;
-        case '\'':
-            strcpy(&output[j], "&#39;");
-            j += 5;
-            break;
-        default:
-            output[j] = input[i];
-            j++;
+            case '&':
+                strcpy(&output[j], "&amp;");
+                j += 5;
+                break;
+            case '<':
+                strcpy(&output[j], "&lt;");
+                j += 4;
+                break;
+            case '>':
+                strcpy(&output[j], "&gt;");
+                j += 4;
+                break;
+            case '"':
+                strcpy(&output[j], "&quot;");
+                j += 6;
+                break;
+            case '\'':
+                strcpy(&output[j], "&#39;");
+                j += 5;
+                break;
+            default:
+                output[j] = input[i];
+                ++j;
         }
     }
     output[j] = '\0';
