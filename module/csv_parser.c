@@ -11,16 +11,16 @@ void cb_field(void *field, size_t field_len, void *data)
     {
         if ((tempPlayer = malloc(sizeof(PlayerStats))) == NULL)
         {
-            perror("Failed to allocate memory for PlayerStats");
-            exit(-1);
+            fprintf(stderr, "Failed to allocate memory for PlayerStats.\n");
+            exit(1);
         }
     }
     if (!tempMatch)
     {
         if ((tempMatch = malloc(sizeof(MatchStats))) == NULL)
         {
-            perror("Failed to allocate memory for MatchStats");
-            exit(-1);
+            fprintf(stderr, "Failed to allocate memory for MatchStats\n");
+            exit(1);
         }
     }
 
