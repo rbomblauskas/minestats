@@ -25,7 +25,8 @@ void cb_field(void *field, size_t field_len, void *data)
     }
 
     char buffer[256];
-    snprintf(buffer, field_len + 1, "%.*s", (int)field_len, (char *)field);
+    size_t copy_len = (field_len < sizeof(buffer) - 1) ? field_len : sizeof(buffer) - 1;
+    memcpy(buffer, field, copy_len);
 
     switch (fieldIndex)
     {
