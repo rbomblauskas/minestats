@@ -1,126 +1,72 @@
 #include "html_generator.h"
 #include <stdlib.h>
 #include <string.h>
-
-char *escape_html(const char *input)
-{
-    if (input == NULL)
-    {
-        return NULL;
-    }
-
-    size_t max_len = strlen(input) * 6 + 1;
-    char *output = (char *)malloc(max_len);
-
-    if (output == NULL)
-    {
-        return NULL;
-    }
-
-    size_t j = 0;
-    for (size_t i = 0; input[i] != '\0'; ++i)
-    {
-        switch (input[i])
-        {
-        case '&':
-            strcpy(&output[j], "&amp;");
-            j += 5;
-            break;
-        case '<':
-            strcpy(&output[j], "&lt;");
-            j += 4;
-            break;
-        case '>':
-            strcpy(&output[j], "&gt;");
-            j += 4;
-            break;
-        case '"':
-            strcpy(&output[j], "&quot;");
-            j += 6;
-            break;
-        case '\'':
-            strcpy(&output[j], "&#39;");
-            j += 5;
-            break;
-        default:
-            output[j] = input[i];
-            ++j;
-        }
-    }
-    output[j] = '\0';
-    return output;
-}
+#include "enigma_html.c"
 
 void write_leaderboard_html_header(FILE *html_file)
 {
-    fprintf(html_file, "<!DOCTYPE html>\n");
-    fprintf(html_file, "<html lang=\"en\">\n");
-    fprintf(html_file, "<head>\n");
-    fprintf(html_file, "    <meta charset=\"UTF-8\">\n");
-    fprintf(html_file, "    <title>Minesweeper - Leaderboard</title>\n");
-    fprintf(html_file, "    <link rel=\"stylesheet\" href=\"style.css\">\n");
-    fprintf(html_file, "</head>\n");
+    html_document_begin(html_file, "Minesweeper - Leaderboard", "style.css");
 }
 
 void write_leaderboard_html_body(FILE *html_file)
 {
-    fprintf(html_file, "<body>\n");
-    fprintf(html_file, "    <nav class=\"navbar\">\n");
-    fprintf(html_file, "        <div class=\"navbar-logo\">Minesweeper</div>\n");
-    fprintf(html_file, "        <ul class=\"navbar-links\">\n");
-    fprintf(html_file, "            <li><a href=\"/\">Play</a></li>\n");
-    fprintf(html_file, "            <li><a href=\"/leaderboard.html\">Leaderboard</a></li>\n");
-    // fprintf(html_file, "            <li><a href=\"/matches.html\">Matches</a></li>\n");
-    fprintf(html_file, "        </ul>\n");
-    fprintf(html_file, "    </nav>\n");
-    fprintf(html_file, "    <div class=\"leaderboard-container\">\n");
-    fprintf(html_file, "        <h1 class=\"leaderboard-title\">Top Players</h1>\n");
-    fprintf(html_file, "        <div class=\"leaderboard-table-container\">\n");
-    fprintf(html_file, "            <table class=\"leaderboard-table\">\n");
-    fprintf(html_file, "                <thead>\n");
-    fprintf(html_file, "                    <tr>\n");
-    fprintf(html_file, "                        <th>Rank</th>\n");
-    fprintf(html_file, "                        <th>IP Address</th>\n");
-    fprintf(html_file, "                        <th>Best Time</th>\n");
-    fprintf(html_file, "                        <th>Games Won</th>\n");
-    fprintf(html_file, "                        <th>Win Rate</th>\n");
-    fprintf(html_file, "                        <th>Last Played</th>\n");
-    fprintf(html_file, "                    </tr>\n");
-    fprintf(html_file, "                </thead>\n");
-    fprintf(html_file, "                <tbody>\n");
+    NavbarItem navbarItems[] = {
+        {"/", "Play", NULL},
+        {"/leaderboard.html", "Leaderboard", NULL}
+    };
+    NavbarConfig navbarConfig = {"navbar", "navbar", "Minesweeper", "navbar-logo", navbarItems, 2};
+    navbar_gen(html_file, &navbarConfig);
+
+    div_begin(html_file, "leaderboard-container", NULL);
+    h1_gen(html_file, "Top Players", "leaderboard-title");
+    div_begin(html_file, "leaderboard-table-container", NULL);
+
+    TableColumn columns[] = {
+        {"Rank", NULL, ALIGN_LEFT},
+        {"IP Address", NULL, ALIGN_LEFT},
+        {"Best Time", NULL, ALIGN_LEFT},
+        {"Games Won", NULL, ALIGN_LEFT},
+        {"Win Rate", NULL, ALIGN_LEFT},
+        {"Last Played", NULL, ALIGN_LEFT}
+    };
+    TableConfig tableConfig = {"leaderboard-table", "leaderboard-table", NULL, false, false, false};
+
+    table_begin(html_file, &tableConfig);
+    table_header(html_file, columns, sizeof(columns) / sizeof(columns[0]));
+
+    table_row_begin(html_file);
 }
 
 void write_player_data(FILE *html_file, int rank, PlayerStats *player)
 {
-    char *escaped_timestamp = escape_html(player->lastPlayed);
+    char *escaped_timestamp = html_escape(player->lastPlayed);
     if (!escaped_timestamp)
     {
         return;
     }
-    fprintf(html_file, "                    <tr>\n");
-    fprintf(html_file, "                        <td><span class=\"rank\">%d</span></td>\n", rank);
-    fprintf(html_file, "                        <td class=\"ip-address\">%s</td>\n", player->ipAddress);
+    table_cell(html_file, rank, NULL, ALIGN_LEFT);
+    table_cell(html_file, player->ipAddress, NULL, ALIGN_LEFT); 
+
     if (player->gamesWon == 0)
     {
-        fprintf(html_file, "                        <td>No data</td>\n");
+        table_cell(html_file, "No data", NULL, ALIGN_LEFT);
     }
     else
     {
-        fprintf(html_file, "                        <td>%ds</td>\n", player->elapsedSeconds);
+        table_cell(html_file, player->elapsedSeconds, NULL, ALIGN_LEFT);
     }
-    fprintf(html_file, "                        <td>%d</td>\n", player->gamesWon);
-    fprintf(html_file, "                        <td>%.1f%%</td>\n", player->winRate);
-    fprintf(html_file, "                        <td>%s</td>\n", escaped_timestamp);
-    fprintf(html_file, "                    </tr>\n");
+    table_cell(html_file, player->gamesWon, NULL, ALIGN_LEFT);
+    table_cell_number(html_file, player->winRate, 1, NULL, ALIGN_LEFT);
+    table_cell(html_file, escaped_timestamp, NULL, ALIGN_LEFT);
+
     free(escaped_timestamp);
+    table_row_end(html_file);
 }
 
 void write_leaderboard_html_footer(FILE *html_file)
 {
-    fprintf(html_file, "                </tbody>\n");
-    fprintf(html_file, "            </table>\n");
-    fprintf(html_file, "        </div>\n");
-    fprintf(html_file, "    </div>\n");
-    fprintf(html_file, "</body>\n");
-    fprintf(html_file, "</html>\n");
+    table_end(html_file);
+    div_end(html_file);
+    div_end(html_file);
+    html_document_end(html_file);
 }
