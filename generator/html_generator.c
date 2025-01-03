@@ -1,7 +1,7 @@
 #include "html_generator.h"
 #include <stdlib.h>
 #include <string.h>
-#include "enigma_html.c"
+#include "enigma_html.h"
 
 void write_leaderboard_html_header(FILE *html_file)
 {
@@ -44,8 +44,8 @@ void write_player_data(FILE *html_file, int rank, PlayerStats *player)
     {
         return;
     }
-    table_cell(html_file, rank, NULL, ALIGN_LEFT);
-    table_cell(html_file, player->ipAddress, NULL, ALIGN_LEFT); 
+    fprintf(html_file, "<td><span class=\"rank\">%d</span></td>\n", rank);
+    table_cell(html_file, player->ipAddress, "ip-address", ALIGN_LEFT); 
 
     if (player->gamesWon == 0)
     {
@@ -53,10 +53,16 @@ void write_player_data(FILE *html_file, int rank, PlayerStats *player)
     }
     else
     {
-        table_cell(html_file, player->elapsedSeconds, NULL, ALIGN_LEFT);
+        char time_buffer[32];
+        snprintf(time_buffer, sizeof(time_buffer), "%ds", player->elapsedSeconds);
+        table_cell(html_file, time_buffer, NULL, ALIGN_LEFT);
     }
-    table_cell(html_file, player->gamesWon, NULL, ALIGN_LEFT);
-    table_cell_number(html_file, player->winRate, 1, NULL, ALIGN_LEFT);
+    table_cell_number(html_file, player->gamesWon, 0, NULL, ALIGN_LEFT);
+
+    char win_rate[32];
+    snprintf(win_rate, sizeof(win_rate), "%.1f%%", player->winRate);
+    table_cell(html_file, win_rate, NULL, ALIGN_LEFT);
+
     table_cell(html_file, escaped_timestamp, NULL, ALIGN_LEFT);
 
     free(escaped_timestamp);
