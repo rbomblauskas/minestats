@@ -39,11 +39,6 @@ void write_leaderboard_html_body(FILE *html_file)
 
 void write_player_data(FILE *html_file, int rank, PlayerStats *player)
 {
-    char *escaped_timestamp = html_escape(player->lastPlayed);
-    if (!escaped_timestamp)
-    {
-        return;
-    }
     table_cell_format(html_file, NULL, ALIGN_CENTER, "<span class=\"rank\">%d</span>", rank);
     table_cell(html_file, player->ipAddress, "ip-address", ALIGN_LEFT); 
 
@@ -57,13 +52,10 @@ void write_player_data(FILE *html_file, int rank, PlayerStats *player)
     }
     table_cell_number(html_file, player->gamesWon, 0, NULL, ALIGN_LEFT);
 
-    char win_rate[32];
-    snprintf(win_rate, sizeof(win_rate), "%.1f%%", player->winRate);
-    table_cell(html_file, win_rate, NULL, ALIGN_LEFT);
+    table_cell_format(html_file, NULL, ALIGN_LEFT, "%.1f%%", player->winRate);
 
-    table_cell(html_file, escaped_timestamp, NULL, ALIGN_LEFT);
+    table_cell(html_file, player->lastPlayed, NULL, ALIGN_LEFT);
 
-    free(escaped_timestamp);
     table_row_end(html_file);
 }
 
