@@ -4,6 +4,7 @@
 #include <csv.h>
 #include "types.h"
 #include "leaderboard.h"
+#include "matches.h"
 
 typedef enum
 {

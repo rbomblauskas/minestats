@@ -1,4 +1,5 @@
 #include "csv_parser.h"
+#include "matches.h"
 #include <string.h>
 
 PlayerStats *tempPlayer = NULL;
@@ -62,6 +63,10 @@ void cb_field(void *field, size_t field_len, void *data)
             {
                 tempMatch->revealedFlat[fieldIndex - FIELD_REVEALED_FLAT_START] = atoi(buffer);
             }
+            else if (fieldIndex >= FIELD_FLAGS_FLAT_START && fieldIndex < FIELD_FLAGS_FLAT_START)
+            {
+                tempMatch->flagsFlat[fieldIndex - FIELD_FLAGS_FLAT_START] = atoi(buffer);
+            }
             break;
     }
     ++fieldIndex;
@@ -72,6 +77,8 @@ void cb_row(int columnCount, void *data)
     if (tempPlayer && tempMatch && fieldIndex == FIELD_NUM)
     {
         update_player_stats(tempPlayer->ipAddress, tempPlayer->elapsedSeconds, tempPlayer->lastPlayed, tempMatch->gameWon);
+        add_match(tempMatch->gameWon, tempMatch->boardSize, tempMatch->minePercentage, tempMatch->timestamp, tempMatch->boardFlat, tempMatch->revealedFlat, tempMatch->flagsFlat);
+        matchData.matches[matchData.matchCount++] = *tempMatch;
     }
     else
     {
