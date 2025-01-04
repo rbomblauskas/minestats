@@ -164,64 +164,9 @@ void write_match_board_page(FILE *html_file, MatchStats *match, int rank)
     h1_gen(html_file, title, NULL);
     div_end(html_file);
 
-    // Convert bool arrays to strings
-    char board_str[BOARD_SIZE * 2 + 1] = {0};
-    char revealed_str[BOARD_SIZE * 2 + 1] = {0};
-    char flags_str[BOARD_SIZE * 2 + 1] = {0};
-
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        strcat(board_str, match->boardFlat[i] ? "1" : "0");
-        strcat(revealed_str, match->revealedFlat[i] ? "1" : "0");
-        strcat(flags_str, match->flagsFlat[i] ? "1" : "0");
-    }
-
-    // Add the board visualization script
-    fprintf(html_file, "<script>\n");
-    fprintf(html_file, "function visualizeBoard(boardFlat, revealedFlat, flagsFlat, size) {\n");
-    fprintf(html_file, "    const board = document.createElement('table');\n");
-    fprintf(html_file, "    board.id = 'gameBoard';\n");
-    fprintf(html_file, "    for (let i = 0; i < size; i++) {\n");
-    fprintf(html_file, "        const row = document.createElement('tr');\n");
-    fprintf(html_file, "        for (let j = 0; j < size; j++) {\n");
-    fprintf(html_file, "            const cell = document.createElement('td');\n");
-    fprintf(html_file, "            const index = i * size + j;\n");
-    fprintf(html_file, "            if (flagsFlat[index] === '1') {\n");
-    fprintf(html_file, "                cell.textContent = '🚩';\n");
-    fprintf(html_file, "                cell.classList.add('flag');\n");
-    fprintf(html_file, "            } else if (boardFlat[index] === '1') {\n");
-    fprintf(html_file, "                cell.textContent = '💣';\n");
-    fprintf(html_file, "                cell.classList.add('mine');\n");
-    fprintf(html_file, "            } else if (revealedFlat[index] === '1') {\n");
-    fprintf(html_file, "                cell.classList.add('revealed');\n");
-    fprintf(html_file, "                let mineCount = 0;\n");
-    fprintf(html_file, "                for (let di = -1; di <= 1; di++) {\n");
-    fprintf(html_file, "                    for (let dj = -1; dj <= 1; dj++) {\n");
-    fprintf(html_file, "                        const ni = i + di;\n");
-    fprintf(html_file, "                        const nj = j + dj;\n");
-    fprintf(html_file, "                        if (ni >= 0 && ni < size && nj >= 0 && nj < size) {\n");
-    fprintf(html_file, "                            if (boardFlat[ni * size + nj] === '1') mineCount++;\n");
-    fprintf(html_file, "                        }\n");
-    fprintf(html_file, "                    }\n");
-    fprintf(html_file, "                }\n");
-    fprintf(html_file, "                if (mineCount > 0) {\n");
-    fprintf(html_file, "                    cell.textContent = mineCount;\n");
-    fprintf(html_file, "                    cell.classList.add(`number${mineCount}`);\n");
-    fprintf(html_file, "                }\n");
-    fprintf(html_file, "            } else {\n");
-    fprintf(html_file, "                cell.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';\n");
-    fprintf(html_file, "            }\n");
-    fprintf(html_file, "            row.appendChild(cell);\n");
-    fprintf(html_file, "        }\n");
-    fprintf(html_file, "        board.appendChild(row);\n");
-    fprintf(html_file, "    }\n");
-    fprintf(html_file, "    return board;\n");
-    fprintf(html_file, "}\n");
-    fprintf(html_file, "</script>\n");
-
     // Create the board
     fprintf(html_file, "<div id='board' style='display: flex; justify-content: center;'></div>");
-    fprintf(html_file, "<script>document.getElementById('board').appendChild(visualizeBoard('%s', '%s', '%s', %d));</script>", 
-        board_str, revealed_str, flags_str, (int)sqrt(BOARD_SIZE));
+    generate_game_board(html_file, match->boardFlat, match->revealedFlat, match->flagsFlat, (int)sqrt(BOARD_SIZE));
 
     div_end(html_file);
     html_document_end(html_file);
