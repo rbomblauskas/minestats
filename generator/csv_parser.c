@@ -63,7 +63,7 @@ void cb_field(void *field, size_t field_len, void *data)
             {
                 tempMatch->revealedFlat[fieldIndex - FIELD_REVEALED_FLAT_START] = atoi(buffer);
             }
-            else if (fieldIndex >= FIELD_FLAGS_FLAT_START && fieldIndex < FIELD_FLAGS_FLAT_START)
+            else if (fieldIndex >= FIELD_FLAGS_FLAT_START && fieldIndex < FIELD_FLAGS_FLAT_START + BOARD_SIZE)
             {
                 tempMatch->flagsFlat[fieldIndex - FIELD_FLAGS_FLAT_START] = atoi(buffer);
             }

@@ -1,6 +1,7 @@
 #include "enigma_html.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #define MAX_NUMBER_LENGTH 32
 
@@ -232,6 +233,33 @@ void table_cell(FILE *fp, const char *content, const char *css_class, ColumnAlig
         free(escaped);
     }
 
+    fprintf(fp, "</td>\n");
+}
+
+void table_cell_format(FILE *fp, const char *css_class, ColumnAlignment align, const char *format, ...)
+{
+    if (!fp)
+        return;
+
+    fprintf(fp, "<td");
+
+    if (css_class || align != ALIGN_LEFT)
+    {
+        fprintf(fp, " class=\"");
+        if (css_class)
+        {
+            fprintf(fp, "%s ", css_class);
+        }
+        fprintf(fp, "%s\"", get_alignment_class(align));
+    }
+
+    fprintf(fp, ">");
+
+    va_list args;
+    va_start(args, format);
+    // https://stackoverflow.com/questions/14727327/c-write-variable-parameter-list-to-file
+    vfprintf(fp, format, args);
+    va_end(args);
     fprintf(fp, "</td>\n");
 }
 

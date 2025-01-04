@@ -76,6 +76,9 @@ void table_row_begin(FILE *fp);
 // Write a cell with text content
 void table_cell(FILE *fp, const char *content, const char *css_class, ColumnAlignment align);
 
+// Function to format and directly write a table cell
+void table_cell_format(FILE *fp, const char *css_class, ColumnAlignment align, const char *format, ...);
+
 // Write a cell with numeric content
 void table_cell_number(FILE *fp, double number, int decimals, const char *css_class, ColumnAlignment align);
 

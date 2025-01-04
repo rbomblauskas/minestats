@@ -46,7 +46,7 @@ void write_player_data(FILE *html_file, int rank, PlayerStats *player)
     {
         return;
     }
-    fprintf(html_file, "<td><span class=\"rank\">%d</span></td>\n", rank);
+    table_cell_format(html_file, NULL, ALIGN_CENTER, "<span class=\"rank\">%d</span>", rank);
     table_cell(html_file, player->ipAddress, "ip-address", ALIGN_LEFT); 
 
     if (player->gamesWon == 0)
@@ -55,9 +55,7 @@ void write_player_data(FILE *html_file, int rank, PlayerStats *player)
     }
     else
     {
-        char time_buffer[32];
-        snprintf(time_buffer, sizeof(time_buffer), "%ds", player->elapsedSeconds);
-        table_cell(html_file, time_buffer, NULL, ALIGN_LEFT);
+        table_cell_format(html_file, NULL, ALIGN_LEFT, "%ds", player->elapsedSeconds);
     }
     table_cell_number(html_file, player->gamesWon, 0, NULL, ALIGN_LEFT);
 
