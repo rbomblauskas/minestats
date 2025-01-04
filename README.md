@@ -28,7 +28,7 @@ sudo apt install libcsv-dev
 Run the `make` command:
 
 ```bash
-cd module
+cd generator
 make
 ```
 
@@ -36,7 +36,7 @@ This will compile an executable file (./gen).
 
 ### Usage
 
-To generate the `leaderboard.html` file, simply run (in module directory):
+To generate the `leaderboard.html` file, simply run (in `generator` directory):
 ```bash
 ./gen matches.csv ../frontend/leaderboard.html
 ```
