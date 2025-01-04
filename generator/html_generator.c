@@ -44,7 +44,7 @@ void write_player_data(FILE *html_file, int rank, PlayerStats *player)
     {
         return;
     }
-    fprintf(html_file, "<td><span class=\"rank\">%d</span></td>\n", rank);
+    table_cell_format(html_file, NULL, ALIGN_CENTER, "<span class=\"rank\">%d</span>", rank);
     table_cell(html_file, player->ipAddress, "ip-address", ALIGN_LEFT); 
 
     if (player->gamesWon == 0)
