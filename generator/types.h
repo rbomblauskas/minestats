@@ -36,4 +36,10 @@ typedef struct
     int playerCount;
 } LeaderboardData;
 
+typedef struct
+{
+    MatchStats *matches;
+    int matchCount;
+} MatchData;
+
 #endif

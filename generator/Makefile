@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -O2
 LDFLAGS = -lcsv
-SRC = main.c minestats.c leaderboard.c html_generator.c csv_parser.c enigma_html.c
+SRC = main.c minestats.c leaderboard.c matches.c html_generator.c csv_parser.c enigma_html.c
 OBJ = $(SRC:.c=.o)
 TARGET = gen
 
