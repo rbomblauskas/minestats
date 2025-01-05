@@ -105,24 +105,13 @@ void write_matches_html_body(FILE *html_file)
 
 void write_matches_data(FILE *html_file, int rank, MatchStats *match)
 {
-    char *escaped_timestamp = html_escape(match->timestamp);
-    if (!escaped_timestamp)
-    {
-        return;
-    }
     table_cell(html_file, match->gameWon ? "Won" : "Lost", NULL, ALIGN_LEFT); 
     table_cell_number(html_file, match->boardSize, 0, NULL, ALIGN_LEFT);
 
-    char mine_percentage[32];
-    snprintf(mine_percentage, sizeof(mine_percentage), "%.1f%%", match->minePercentage);
-    table_cell(html_file, mine_percentage, NULL, ALIGN_LEFT);
-   
-    table_cell(html_file, escaped_timestamp, NULL, ALIGN_LEFT);
+    table_cell_format(html_file, NULL, ALIGN_LEFT, "%.1f%%", match->minePercentage);
+    table_cell(html_file, match->timestamp, NULL, ALIGN_LEFT);
+    table_cell_format(html_file, NULL, ALIGN_LEFT, "<a href='match%d.html' class='board-button'>View Board</a>", rank);
 
-    // Create a link to the individual match board view
-    fprintf(html_file, "<td><a href='match%d.html' class='board-button'>View Board</a></td>", rank);
-
-    free(escaped_timestamp);
     table_row_end(html_file);
 
     // Generate individual match page
