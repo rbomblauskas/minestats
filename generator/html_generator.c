@@ -114,15 +114,6 @@ void write_matches_data(FILE *html_file, int match_num, MatchStats *match)
 
     table_row_end(html_file);
 
-    // Generate individual match page
-    char filename[32];
-    snprintf(filename, sizeof(filename), "../frontend/match%d.html", match_num);
-    FILE *match_file = fopen(filename, "w");
-    
-    if (match_file) {
-        write_match_board_page(match_file, match, match_num);
-        fclose(match_file);
-    }
 }
 
 void write_match_board_page(FILE *html_file, MatchStats *match, int match_num)

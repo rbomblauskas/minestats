@@ -18,7 +18,7 @@ void initialize_minestats()
         exit(1);
     }
     leaderboard.playerCount = 0;
-    matchData.matches = malloc(sizeof(MatchData) * MAX_PLAYERS);
+    matchData.matches = malloc(sizeof(MatchData) * MAX_MATCHES);
     if (!matchData.matches)
     {
         fprintf(stderr, "Failed to allocate memory for matches.\n");
@@ -52,7 +52,6 @@ void parse_csv_file(const char *filename)
 
     // Naudojame qsort, kad surikiuoti žaidėjus pagal atlikimo laiką
     qsort(leaderboard.players, leaderboard.playerCount, sizeof(PlayerStats), compare_players);
-    qsort(matchData.matches, matchData.matchCount, sizeof(MatchStats), compare_matches);
 }
 
 void generate_leaderboard_html(const char *filename)
@@ -96,6 +95,24 @@ void generate_matches_html(const char *filename)
 
     write_matches_html_footer(html_file);
     fclose(html_file);
+}
+
+void generate_individual_matches_html(const char *filepath)
+{
+
+    for (int i = 0; i < matchData.matchCount; i++)
+    {
+        char filename[MAX_FILE_PATH_SIZE];
+        snprintf(filename, sizeof(filename), "%s/match%d.html", filepath, i + 1);
+        FILE *match_file = fopen(filename, "w");
+        if (!match_file)
+        {
+            fprintf(stderr, "Failed to open output file %s\n", filename);
+            exit(1);
+        }
+        write_match_board_page(match_file, &matchData.matches[i], i + 1);
+        fclose(match_file);
+    }
 }
 
 void cleanup_minestats()

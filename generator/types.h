@@ -4,8 +4,10 @@
 #include <stdbool.h>
 
 #define MAX_IP_LENGTH 16
+#define MAX_FILE_PATH_SIZE 255
 #define BOARD_SIZE 81
 #define MAX_PLAYERS 1000
+#define MAX_MATCHES 10000
 #define FIELD_NUM 250
 
 typedef struct

@@ -24,18 +24,20 @@ void update_player_stats(const char *ipAddress, int elapsedSeconds, const char *
         }
     }
 
-    // Pridedame naują žaidėją
-    if (leaderboard.playerCount < MAX_PLAYERS)
+    if (leaderboard.playerCount >= MAX_PLAYERS)
     {
-        int i = leaderboard.playerCount;
-        strcpy(leaderboard.players[i].ipAddress, ipAddress);
-        leaderboard.players[i].elapsedSeconds = gameWon ? elapsedSeconds : 1000000000;
-        leaderboard.players[i].gamesWon = gameWon ? 1 : 0;
-        leaderboard.players[i].gamesPlayed = 1;
-        leaderboard.players[i].winRate = leaderboard.players[i].gamesWon * 100.0f;
-        strcpy(leaderboard.players[i].lastPlayed, timestamp);
-        leaderboard.playerCount++;
+        fprintf(stderr, "Maximum amount of matches reached.\n");
+        return;
     }
+    // Pridedame naują žaidėją
+    int i = leaderboard.playerCount;
+    strcpy(leaderboard.players[i].ipAddress, ipAddress);
+    leaderboard.players[i].elapsedSeconds = gameWon ? elapsedSeconds : 1000000000;
+    leaderboard.players[i].gamesWon = gameWon ? 1 : 0;
+    leaderboard.players[i].gamesPlayed = 1;
+    leaderboard.players[i].winRate = leaderboard.players[i].gamesWon * 100.0f;
+    strcpy(leaderboard.players[i].lastPlayed, timestamp);
+    leaderboard.playerCount++;
 }
 
 int compare_players(const void *a, const void *b)
