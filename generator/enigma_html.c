@@ -135,10 +135,9 @@ void h1_gen_format(FILE *fp, const char *css_class, const char *format, ...)
     va_start(args, format);
     vfprintf(fp, format, args);
     va_end(args);
-    
+
     fprintf(fp, "</h1>\n");
 }
-
 
 static const char *get_alignment_class(ColumnAlignment align)
 {

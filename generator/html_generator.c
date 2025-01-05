@@ -14,8 +14,7 @@ void write_leaderboard_html_body(FILE *html_file)
     NavbarItem navbarItems[] = {
         {"/", "Play", NULL},
         {"/leaderboard.html", "Leaderboard", NULL},
-        {"/matches.html", "Matches", NULL}
-    };
+        {"/matches.html", "Matches", NULL}};
     NavbarConfig navbarConfig = {"navbar", "navbar", "Minesweeper", "navbar-logo", navbarItems, 3};
     navbar_gen(html_file, &navbarConfig);
 
@@ -29,8 +28,7 @@ void write_leaderboard_html_body(FILE *html_file)
         {"Best Time", NULL, ALIGN_LEFT},
         {"Games Won", NULL, ALIGN_LEFT},
         {"Win Rate", NULL, ALIGN_LEFT},
-        {"Last Played", NULL, ALIGN_LEFT}
-    };
+        {"Last Played", NULL, ALIGN_LEFT}};
     TableConfig tableConfig = {"leaderboard-table", "leaderboard-table", NULL, false, false, false};
 
     table_begin(html_file, &tableConfig);
@@ -42,7 +40,7 @@ void write_leaderboard_html_body(FILE *html_file)
 void write_player_data(FILE *html_file, int rank, PlayerStats *player)
 {
     table_cell_format(html_file, NULL, ALIGN_CENTER, "<span class=\"rank\">%d</span>", rank);
-    table_cell(html_file, player->ipAddress, "ip-address", ALIGN_LEFT); 
+    table_cell(html_file, player->ipAddress, "ip-address", ALIGN_LEFT);
 
     if (player->gamesWon == 0)
     {
@@ -79,8 +77,7 @@ void write_matches_html_body(FILE *html_file)
     NavbarItem navbarItems[] = {
         {"/", "Play", NULL},
         {"/leaderboard.html", "Leaderboard", NULL},
-        {"/matches.html", "Matches", NULL}
-    };
+        {"/matches.html", "Matches", NULL}};
     NavbarConfig navbarConfig = {"navbar", "navbar", "Minesweeper", "navbar-logo", navbarItems, 3};
     navbar_gen(html_file, &navbarConfig);
 
@@ -105,7 +102,7 @@ void write_matches_html_body(FILE *html_file)
 
 void write_matches_data(FILE *html_file, int match_num, MatchStats *match)
 {
-    table_cell(html_file, match->gameWon ? "Won" : "Lost", NULL, ALIGN_LEFT); 
+    table_cell(html_file, match->gameWon ? "Won" : "Lost", NULL, ALIGN_LEFT);
     table_cell_number(html_file, match->boardSize, 0, NULL, ALIGN_LEFT);
 
     table_cell_format(html_file, NULL, ALIGN_LEFT, "%.1f%%", match->minePercentage);
@@ -113,25 +110,23 @@ void write_matches_data(FILE *html_file, int match_num, MatchStats *match)
     table_cell_format(html_file, NULL, ALIGN_LEFT, "<a href='match%d.html' class='board-button'>View Board</a>", match_num);
 
     table_row_end(html_file);
-
 }
 
 void write_match_board_page(FILE *html_file, MatchStats *match, int match_num)
 {
     html_document_begin(html_file, "Minesweeper - Match Board", "style.css");
-    
+
     NavbarItem navbarItems[] = {
         {"/", "Play", NULL},
         {"/leaderboard.html", "Leaderboard", NULL},
-        {"/matches.html", "Matches", NULL}
-    };
+        {"/matches.html", "Matches", NULL}};
     NavbarConfig navbarConfig = {"navbar", "navbar", "Minesweeper", "navbar-logo", navbarItems, 3};
     navbar_gen(html_file, &navbarConfig);
 
     div_begin(html_file, NULL, "game-container");
-    
+
     h1_gen_format(html_file, "gameboard-title", "Match #%d - %s", match_num, match->gameWon ? "Won" : "Lost");
-    
+
     // Create the board
     generate_game_board(html_file, match->boardFlat, match->revealedFlat, match->flagsFlat, (int)sqrt(BOARD_SIZE));
 

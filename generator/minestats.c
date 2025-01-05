@@ -7,8 +7,6 @@
 #include "minestats.h"
 #include "csv_parser.h"
 
-MatchData matchData;
-
 void initialize_minestats()
 {
     leaderboard.players = malloc(sizeof(PlayerStats) * MAX_PLAYERS);
