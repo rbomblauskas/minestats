@@ -103,29 +103,29 @@ void write_matches_html_body(FILE *html_file)
     table_row_begin(html_file);
 }
 
-void write_matches_data(FILE *html_file, int rank, MatchStats *match)
+void write_matches_data(FILE *html_file, int match_num, MatchStats *match)
 {
     table_cell(html_file, match->gameWon ? "Won" : "Lost", NULL, ALIGN_LEFT); 
     table_cell_number(html_file, match->boardSize, 0, NULL, ALIGN_LEFT);
 
     table_cell_format(html_file, NULL, ALIGN_LEFT, "%.1f%%", match->minePercentage);
     table_cell(html_file, match->timestamp, NULL, ALIGN_LEFT);
-    table_cell_format(html_file, NULL, ALIGN_LEFT, "<a href='match%d.html' class='board-button'>View Board</a>", rank);
+    table_cell_format(html_file, NULL, ALIGN_LEFT, "<a href='match%d.html' class='board-button'>View Board</a>", match_num);
 
     table_row_end(html_file);
 
     // Generate individual match page
     char filename[32];
-    snprintf(filename, sizeof(filename), "../frontend/match%d.html", rank);
-    FILE* match_file = fopen(filename, "w");
+    snprintf(filename, sizeof(filename), "../frontend/match%d.html", match_num);
+    FILE *match_file = fopen(filename, "w");
     
     if (match_file) {
-        write_match_board_page(match_file, match, rank);
+        write_match_board_page(match_file, match, match_num);
         fclose(match_file);
     }
 }
 
-void write_match_board_page(FILE *html_file, MatchStats *match, int rank)
+void write_match_board_page(FILE *html_file, MatchStats *match, int match_num)
 {
     html_document_begin(html_file, "Minesweeper - Match Board", "style.css");
     
@@ -137,16 +137,11 @@ void write_match_board_page(FILE *html_file, MatchStats *match, int rank)
     NavbarConfig navbarConfig = {"navbar", "navbar", "Minesweeper", "navbar-logo", navbarItems, 3};
     navbar_gen(html_file, &navbarConfig);
 
-    div_begin(html_file, "game-container", NULL);
+    div_begin(html_file, NULL, "game-container");
     
-    fprintf(html_file, "<div id='game-status' style='padding-top: 80px; font-size: 1.8rem;'>");
-    char title[64];
-    snprintf(title, sizeof(title), "Match #%d - %s", rank, match->gameWon ? "Won" : "Lost");
-    h1_gen(html_file, title, NULL);
-    div_end(html_file);
-
+    h1_gen_format(html_file, "gameboard-title", "Match #%d - %s", match_num, match->gameWon ? "Won" : "Lost");
+    
     // Create the board
-    fprintf(html_file, "<div id='board' style='display: flex; justify-content: center;'></div>");
     generate_game_board(html_file, match->boardFlat, match->revealedFlat, match->flagsFlat, (int)sqrt(BOARD_SIZE));
 
     div_end(html_file);

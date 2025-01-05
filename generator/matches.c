@@ -2,14 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-MatchData match_data = {NULL, 0};
-
-void add_match(bool game_won, int board_size, float mine_percentage, const char* timestamp, bool* board_flat, bool* revealed_flat, bool* flags_flat)
+void add_match(bool game_won, int board_size, float mine_percentage, const char *timestamp, bool *board_flat, bool *revealed_flat, bool *flags_flat)
 {
-    match_data.matchCount++;
-    match_data.matches = realloc(match_data.matches, match_data.matchCount * sizeof(MatchStats));
+    matchData.matchCount++;
+    matchData.matches = realloc(matchData.matches, matchData.matchCount * sizeof(MatchStats));
     
-    MatchStats* new_match = &match_data.matches[match_data.matchCount - 1];
+    MatchStats* new_match = &matchData.matches[matchData.matchCount - 1];
     new_match->gameWon = game_won;
     new_match->boardSize = board_size;
     new_match->minePercentage = mine_percentage;

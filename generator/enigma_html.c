@@ -122,6 +122,24 @@ void h1_gen(FILE *fp, const char *title, const char *css_class)
     fprintf(fp, "</h1>\n");
 }
 
+void h1_gen_format(FILE *fp, const char *css_class, const char *format, ...)
+{
+    fprintf(fp, "<h1");
+    if (css_class)
+    {
+        fprintf(fp, " class=\"%s\"", css_class);
+    }
+    fprintf(fp, ">");
+
+    va_list args;
+    va_start(args, format);
+    vfprintf(fp, format, args);
+    va_end(args);
+    
+    fprintf(fp, "</h1>\n");
+}
+
+
 static const char *get_alignment_class(ColumnAlignment align)
 {
     switch (align)
@@ -281,34 +299,33 @@ void table_cell_with_board_content(FILE *fp, bool is_bomb, bool is_flag, bool is
 {
     if (is_flag)
     {
-        fprintf(fp, "<td class='flag'>\xF0\x9F\x9A\xA9</td>\n");
+        table_cell(fp, "\xF0\x9F\x9A\xA9", "flag", ALIGN_CENTER);
     }
     else if (is_bomb)
     {
-        fprintf(fp, "<td class='mine'>\xF0\x9F\x92\xA3</td>\n");
+        table_cell(fp, "\xF0\x9F\x92\xA3", "mine", ALIGN_CENTER);
     }
     else if (is_revealed)
     {
         if (mine_count > 0)
         {
-            fprintf(fp, "<td class='revealed number%d'>%d</td>\n", mine_count, mine_count);
+            table_cell_format(fp, "revealed number%d", ALIGN_CENTER, "%d", mine_count);
         }
         else
         {
-            fprintf(fp, "<td class='revealed'></td>\n");
+            table_cell(fp, "", "revealed", ALIGN_CENTER);
         }
     }
     else
     {
-        fprintf(fp, "<td style='background-color: rgba(255, 255, 255, 0.7);'></td>\n");
+        table_cell(fp, "", "unrevealed", ALIGN_CENTER);
     }
 }
 
 void generate_game_board(FILE *fp, const bool *board_flat, const bool *revealed_flat, const bool *flags_flat, int size)
 {
-    fprintf(fp, "<div style='display: flex; justify-content: center; align-items: center; padding: 2rem;'>\n");
-    fprintf(fp, "<table id='gameBoard' style='transform: scale(1.2);'>\n");
-    
+    TableConfig boardConfig = {"gameBoard", NULL, NULL, false, false, false};
+    table_begin(fp, &boardConfig);
     for (int i = 0; i < size; i++)
     {
         fprintf(fp, "<tr>\n");
@@ -334,10 +351,9 @@ void generate_game_board(FILE *fp, const bool *board_flat, const bool *revealed_
             }
             table_cell_with_board_content(fp, board_flat[index], flags_flat[index], revealed_flat[index], mine_count);
         }
-        fprintf(fp, "</tr>\n");
+        table_row_end(fp);
     }
-    fprintf(fp, "</table>\n");
-    fprintf(fp, "</div>\n");
+    table_end(fp);
 }
 
 void table_row_end(FILE *fp)

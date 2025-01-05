@@ -78,7 +78,6 @@ void cb_row(int columnCount, void *data)
     {
         update_player_stats(tempPlayer->ipAddress, tempPlayer->elapsedSeconds, tempPlayer->lastPlayed, tempMatch->gameWon);
         add_match(tempMatch->gameWon, tempMatch->boardSize, tempMatch->minePercentage, tempMatch->timestamp, tempMatch->boardFlat, tempMatch->revealedFlat, tempMatch->flagsFlat);
-        matchData.matches[matchData.matchCount++] = *tempMatch;
     }
     else
     {

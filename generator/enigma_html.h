@@ -64,6 +64,9 @@ void div_end(FILE *fp);
 // Generates an h1 header.
 void h1_gen(FILE *fp, const char *title, const char *css_class);
 
+// Generates an h1 header with format
+void h1_gen_format(FILE *fp, const char *css_class, const char *format, ...);
+
 // Initialize a new table with given configuration
 void table_begin(FILE *fp, const TableConfig *config);
 
