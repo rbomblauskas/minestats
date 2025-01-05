@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,367 +26,316 @@
 
     <div id="scoreModal" class="modal">
       <div class="modal-content">
-        <button onclick="closeModal()" class="close">X</button>
+        <button onclick="close_modal()" class="close">X</button>
         <h2 id="gameResult">Congratulations!</h2>
         <p id="finalTime"></p>
         <div class="form-group">
           <label for="playerName">Enter your name:</label>
           <input type="text" id="playerName" required />
         </div>
-        <button onclick="submitScore()" class="submit">Submit Score</button>
+        <button onclick="submit_score()" class="submit">Submit Score</button>
       </div>
     </div>
 
     <script>
-      class Minesweeper {
-        constructor(size = 9, minePercentage = 0.1) {
-          this.size = size;
-          this.minePercentage = minePercentage;
-          this.board = [];
-          this.mines = [];
-          this.revealed = [];
-          this.flags = [];
-          this.gameOver = false;
-          this.firstClick = true;
+const create_minesweeper = (size = 9, mine_percentage = 0.1) => {
 
-          this.initializeBoard();
-          this.renderBoard();
-          this.setupTimer();
+  let board = [];
+  let mines = [];
+  let revealed = [];
+  let flags = [];
+  let neighbor_mines = [];
+  let game_over = false;
+  let first_click = true;
+  let game_won = false;
+  let start_time = null;
+  let elapsed_seconds = 0;
+  let timer_interval = null;
+  let timer_display = null;
+
+  const initialize_board = () => {
+    board = Array(size * size).fill(false);
+    revealed = Array(size * size).fill(false);
+    flags = Array(size * size).fill(false);
+  };
+
+  const setup_timer = () => {
+    timer_display = document.getElementById("timer");
+  };
+
+  const update_timer = () => {
+    const now = new Date();
+    elapsed_seconds = Math.floor((now - start_time) / 1000);
+    const minutes = Math.floor(elapsed_seconds / 60);
+    const seconds = elapsed_seconds % 60;
+    timer_display.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const start_timer = () => {
+    if (!start_time) {
+      elapsed_seconds = 0;
+      start_time = new Date();
+      timer_interval = setInterval(update_timer, 1000);
+    }
+  };
+
+  const stop_timer = () => {
+    if (timer_interval) {
+      clearInterval(timer_interval);
+      timer_interval = null;
+    }
+  };
+
+  const place_mines = (safe_index) => {
+    board = Array(size * size).fill(false);
+    const safe_row = Math.floor(safe_index / size);
+    const safe_col = safe_index % size;
+    
+    let mines_placed = 0;
+    const total_mines = Math.floor(size * size * mine_percentage);
+
+    while (mines_placed < total_mines) {
+      const random_index = Math.floor(Math.random() * (size * size));
+      if (!board[random_index]) {
+        const random_row = Math.floor(random_index / size);
+        const random_col = random_index % size;
+
+        if (Math.abs(random_row - safe_row) > 1 || Math.abs(random_col - safe_col) > 1) {
+          board[random_index] = true;
+          mines_placed++;
         }
+      }
+    }
 
-        setupTimer() {
-          this.timerDisplay = document.getElementById("timer");
-          this.updateTimer = this.updateTimer.bind(this);
-        }
+    calculate_neighbor_mines();
+  };
 
-        startTimer() {
-          if (!this.startTime) {
-            this.elapsedSeconds = 0;
-            this.startTime = new Date();
+  const calculate_neighbor_mines = () => {
+    neighbor_mines = Array(size * size).fill(0);
 
-            this.timerInterval = setInterval(this.updateTimer, 1000);
-          }
-        }
+    for (let row = 0; row < size; row++) {
+      for (let col = 0; col < size; col++) {
+        const index = row * size + col;
+        if (board[index]) continue;
 
-        stopTimer() {
-          if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
-          }
-        }
+        for (let dx = -1; dx <= 1; dx++) {
+          for (let dy = -1; dy <= 1; dy++) {
+            const new_row = row + dx;
+            const new_col = col + dy;
 
-        updateTimer() {
-          const now = new Date();
-          this.elapsedSeconds = Math.floor((now - this.startTime) / 1000);
-          const minutes = Math.floor(this.elapsedSeconds / 60);
-          const seconds = this.elapsedSeconds % 60;
-          this.timerDisplay.textContent = `Time: ${minutes}:${seconds
-            .toString()
-            .padStart(2, "0")}`;
-        }
-
-        initializeBoard() {
-          for (let row = 0; row < this.size * this.size; ++row) {
-            this.board.push(false);
-            this.revealed.push(false);
-            this.flags.push(false);
-          }
-        }
-
-        placeMines(safeIndex) {
-          // Reset board to clear previous mines
-          this.board = new Array(this.size * this.size).fill(false);
-
-          // Place mines, ensuring the safe index and its neighbors are not mined
-          const safeRow = Math.floor(safeIndex / this.size);
-          const safeCol = safeIndex % this.size;
-
-          let minesPlaced = 0;
-          const totalMines = Math.floor(
-            this.size * this.size * this.minePercentage
-          );
-
-          while (minesPlaced < totalMines) {
-            const randomIndex = Math.floor(
-              Math.random() * (this.size * this.size)
-            );
-
-            // Check if this cell is too close to the safe area or already a mine
-            if (!this.board[randomIndex]) {
-              const randomRow = Math.floor(randomIndex / this.size);
-              const randomCol = randomIndex % this.size;
-
-              // Ensure mine is not in the safe area (3x3 grid around first click)
-              if (
-                Math.abs(randomRow - safeRow) > 1 ||
-                Math.abs(randomCol - safeCol) > 1
-              ) {
-                this.board[randomIndex] = true;
-                minesPlaced++;
-              }
-            }
-          }
-
-          this.calculateNeighborMines();
-        }
-
-        calculateNeighborMines() {
-          this.neighborMines = new Array(this.size * this.size).fill(0);
-
-          for (let rowIndex = 0; rowIndex < this.size; ++rowIndex) {
-            for (let colIndex = 0; colIndex < this.size; ++colIndex) {
-              const index = rowIndex * this.size + colIndex;
-
-              if (this.board[index]) continue;
-
-              for (let deltaX = -1; deltaX <= 1; ++deltaX) {
-                for (let deltaY = -1; deltaY <= 1; ++deltaY) {
-                  const newRowIndex = rowIndex + deltaX;
-                  const newColIndex = colIndex + deltaY;
-
-                  if (
-                    newRowIndex >= 0 &&
-                    newRowIndex < this.size &&
-                    newColIndex >= 0 &&
-                    newColIndex < this.size
-                  ) {
-                    const neighborIndex = newRowIndex * this.size + newColIndex;
-                    if (this.board[neighborIndex]) {
-                      this.neighborMines[index]++;
-                    }
-                  }
-                }
+            if (new_row >= 0 && new_row < size && new_col >= 0 && new_col < size) {
+              const neighbor_index = new_row * size + new_col;
+              if (board[neighbor_index]) {
+                neighbor_mines[index]++;
               }
             }
           }
         }
+      }
+    }
+  };
 
-        renderBoard() {
-          const board = document.getElementById("gameBoard");
-          board.innerHTML = "";
+  const reveal_cell = (index) => {
+    if (game_over || revealed[index] || flags[index]) return;
 
-          for (let rowPosition = 0; rowPosition < this.size; ++rowPosition) {
-            const tr = document.createElement("tr");
+    if (first_click) {
+      place_mines(index);
+      first_click = false;
+      start_timer();
+    }
 
-            for (let colPosition = 0; colPosition < this.size; ++colPosition) {
-              const td = document.createElement("td");
-              const index = rowPosition * this.size + colPosition;
+    revealed[index] = true;
+    const cell = document.querySelector(`[data-index="${index}"]`);
 
-              td.dataset.index = index;
-              td.addEventListener("click", () => this.revealCell(index));
-              td.addEventListener("contextmenu", (e) => {
-                e.preventDefault();
-                this.toggleFlag(index);
-              });
+    if (board[index]) {
+      cell.textContent = "💣";
+      cell.classList.add("mine");
+      game_over = true;
+      game_won = false;
+      stop_timer();
+      reveal_all_mines();
+      setTimeout(() => show_score_modal(false), 1300);
+    } else {
+      cell.classList.add("revealed");
+      cell.textContent = neighbor_mines[index] || ``;
 
-              tr.appendChild(td);
-            }
+      if (neighbor_mines[index] === 0) {
+        reveal_neighbors(index);
+      }
+      check_win_condition();
+    }
+  };
 
-            board.appendChild(tr);
+  const reveal_neighbors = (index) => {
+    const row = Math.floor(index / size);
+    const col = index % size;
+
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        const new_row = row + dx;
+        const new_col = col + dy;
+
+        if (new_row >= 0 && new_row < size && new_col >= 0 && new_col < size) {
+          const neighbor_index = new_row * size + new_col;
+          if (!revealed[neighbor_index]) {
+            reveal_cell(neighbor_index);
           }
-        }
-
-        revealAllMines() {
-          for (let i = 0; i < this.board.length; i++) {
-            if (this.board[i]) {
-              const cell = document.querySelector(`[data-index="${i}"]`);
-              cell.textContent = "💣";
-              cell.classList.add("mine");
-            }
-          }
-        }
-
-        revealCell(index) {
-          if (this.gameOver || this.revealed[index] || this.flags[index])
-            return;
-
-          if (this.firstClick) {
-            this.placeMines(index);
-            this.firstClick = false;
-            this.startTimer();
-          }
-
-          this.revealed[index] = true;
-          const cell = document.querySelector(`[data-index="${index}"]`);
-
-          if (this.board[index]) {
-            cell.textContent = "💣";
-            cell.classList.add("mine");
-            this.gameOver = true;
-            this.gameWon = false;
-            this.stopTimer();
-            this.revealAllMines();
-            setTimeout(() => {
-              this.showScoreModal(false);
-            }, 1300);
-          } else {
-            cell.classList.add("revealed");
-            cell.textContent = this.neighborMines[index] || "";
-
-            if (this.neighborMines[index] === 0) {
-              this.revealNeighbors(index);
-            }
-            this.checkWinCondition();
-          }
-        }
-
-        checkWinCondition() {
-          for (let i = 0; i < this.board.length; ++i) {
-            if (!this.board[i] && !this.revealed[i]) {
-              return;
-            }
-          }
-
-          this.gameOver = true;
-          this.gameWon = true;
-          this.stopTimer();
-          setTimeout(() => {
-            this.showScoreModal(true);
-          }, 1300);
-        }
-
-        showScoreModal(won) {
-          const modal = document.getElementById("scoreModal");
-          const gameResult = document.getElementById("gameResult");
-          const finalTime = document.getElementById("finalTime");
-
-          gameResult.textContent = won ? "Congratulations!" : "Game Over!";
-          gameResult.style.color = won ? "#4CAF50" : "#ff4757";
-
-          const minutes = Math.floor(this.elapsedSeconds / 60);
-          const seconds = (this.elapsedSeconds % 60)
-            .toString()
-            .padStart(2, "0");
-
-          finalTime.textContent = `Your time: ${minutes}:${seconds}`;
-          modal.style.display = "flex";
-          requestAnimationFrame(() => {
-            modal.classList.add("show");
-          });
-        }
-
-        revealNeighbors(index) {
-          const rowPos = Math.floor(index / this.size);
-          const colPos = index % this.size;
-
-          for (let deltaX = -1; deltaX <= 1; ++deltaX) {
-            for (let deltaY = -1; deltaY <= 1; ++deltaY) {
-              const newRowPos = rowPos + deltaX;
-              const newColPos = colPos + deltaY;
-
-              if (
-                newRowPos >= 0 &&
-                newRowPos < this.size &&
-                newColPos >= 0 &&
-                newColPos < this.size
-              ) {
-                const neighborIndex = newRowPos * this.size + newColPos;
-
-                if (!this.revealed[neighborIndex]) {
-                  this.revealCell(neighborIndex);
-                }
-              }
-            }
-          }
-        }
-
-        toggleFlag(index) {
-          if (this.gameOver || this.revealed[index]) return;
-
-          this.flags[index] = !this.flags[index];
-          const cell = document.querySelector(`[data-index="${index}"]`);
-
-          if (this.flags[index]) {
-            cell.classList.add("flag");
-            cell.textContent = "🚩";
-          } else {
-            cell.classList.remove("flag");
-            cell.textContent = "";
-          }
-        }
-
-        getBoardData() {
-          return {
-            size: this.size,
-            minePercentage: this.minePercentage,
-            board: this.board,
-            revealed: this.revealed,
-            flags: this.flags,
-          };
         }
       }
+    }
+  };
 
-      let game = new Minesweeper();
+  const toggle_flag = (index) => {
+    if (game_over || revealed[index]) return;
 
-      async function closeModal() {
-        const modal = document.getElementById("scoreModal");
-        modal.classList.remove("show");
-        setTimeout(() => {
-          modal.style.display = "none";
-        }, 300);
-        document.getElementById("timer").innerText = "Time: 0:00";
-        game = new Minesweeper();
+    flags[index] = !flags[index];
+    const cell = document.querySelector(`[data-index="${index}"]`);
+
+    if (flags[index]) {
+      cell.classList.add("flag");
+      cell.textContent = "🚩";
+    } else {
+      cell.classList.remove("flag");
+      cell.textContent = "";
+    }
+  };
+
+  const reveal_all_mines = () => {
+    board.forEach((is_mine, index) => {
+      if (is_mine) {
+        const cell = document.querySelector(`[data-index="${index}"]`);
+        cell.textContent = "💣";
+        cell.classList.add("mine");
       }
-      async function submitScore() {
-        const playerName = document.getElementById("playerName").value.trim();
-        if (!playerName) {
-          alert("Please enter your name");
-          return;
-        }
-        // We will disallow commas.
-        const sanitizedPlayerName = playerName.replace(/,/g, "");
-        const boardData = game.getBoardData();
-        const boardFlat = boardData.board
-          .map((cell) => (cell ? 1 : 0))
-          .join(",");
-        const revealedFlat = boardData.revealed
-          .map((cell) => (cell ? 1 : 0))
-          .join(",");
-        const flagsFlat = boardData.flags
-          .map((cell) => (cell ? 1 : 0))
-          .join(",");
-        const gameWon = game.gameWon ? 1 : 0;
+    });
+  };
 
-        const gameData = [
-          sanitizedPlayerName,
-          game.elapsedSeconds,
-          new Date().toISOString(),
-          gameWon,
-          boardData.size,
-          boardData.minePercentage,
-          boardFlat,
-          revealedFlat,
-          flagsFlat,
-        ];
+  const check_win_condition = () => {
+    const has_won = board.every((is_mine, index) => is_mine ? true : revealed[index]);
+    if (has_won) {
+      game_over = true;
+      game_won = true;
+      stop_timer();
+      setTimeout(() => show_score_modal(true), 1300);
+    }
+  };
 
-        const csvData = gameData.join(",");
+  const show_score_modal = (won) => {
+    const modal = document.getElementById("scoreModal");
+    const game_result = document.getElementById("gameResult");
+    const final_time = document.getElementById("finalTime");
 
-        try {
-          const response = await fetch("http://rokoserveris.gw.lt:8080/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "text/csv",
-            },
-            body: csvData,
-          });
+    game_result.textContent = won ? "Congratulations!" : "Game Over!";
+    game_result.style.color = won ? "#4CAF50" : "#ff4757";
 
-          if (response.ok) {
-            alert("Score submitted successfully!");
-            const modal = document.getElementById("scoreModal");
-            modal.classList.remove("show");
-            setTimeout(() => {
-              modal.style.display = "none";
-            }, 300);
-            document.getElementById("timer").innerText = "Time: 0:00";
-            game = new Minesweeper();
-          } else {
-            throw new Error("Failed to submit score");
-          }
-        } catch (error) {
-          alert("Error submitting score. Please try again.");
-          console.error("Error:", error);
-        }
+    const minutes = Math.floor(elapsed_seconds / 60);
+    const seconds = (elapsed_seconds % 60).toString().padStart(2, "0");
+    final_time.textContent = `Your time: ${minutes}:${seconds}`;
+
+    modal.style.display = "flex";
+    requestAnimationFrame(() => modal.classList.add("show"));
+  };
+
+  const render_board = () => {
+    const board_element = document.getElementById("gameBoard");
+    board_element.innerHTML = "";
+
+    for (let row = 0; row < size; row++) {
+      const tr = document.createElement("tr");
+      for (let col = 0; col < size; col++) {
+        const td = document.createElement("td");
+        const index = row * size + col;
+
+        td.dataset.index = index;
+        td.addEventListener("click", () => reveal_cell(index));
+        td.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          toggle_flag(index);
+        });
+
+        tr.appendChild(td);
       }
+      board_element.appendChild(tr);
+    }
+  };
+
+  const get_board_data = () => ({
+    size,
+    mine_percentage,
+    board: [...board],
+    revealed: [...revealed],
+    flags: [...flags]
+  });
+
+  initialize_board();
+  render_board();
+  setup_timer();
+
+  return {
+    reveal_cell,
+    toggle_flag,
+    get_board_data,
+    get game_won() { return game_won; },
+    get elapsed_seconds() { return elapsed_seconds; }
+  };
+};
+
+const close_modal = async () => {
+  const modal = document.getElementById("scoreModal");
+  modal.classList.remove("show");
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 300);
+  document.getElementById("timer").innerText = "Time: 0:00";
+  game = create_minesweeper();
+};
+
+const submit_score = async () => {
+  const player_name = document.getElementById("playerName").value.trim();
+  if (!player_name) {
+    alert("Please enter your name");
+    return;
+  }
+
+  const sanitized_player_name = player_name.replace(/,/g, "");
+  const board_data = game.get_board_data();
+  const board_flat = board_data.board.map(cell => cell ? 1 : 0).join(",");
+  const revealed_flat = board_data.revealed.map(cell => cell ? 1 : 0).join(",");
+  const flags_flat = board_data.flags.map(cell => cell ? 1 : 0).join(",");
+  const game_won = game.game_won ? 1 : 0;
+
+  const game_data = [
+    sanitized_player_name,
+    game.elapsed_seconds,
+    new Date().toISOString(),
+    game_won,
+    board_data.size,
+    board_data.mine_percentage,
+    board_flat,
+    revealed_flat,
+    flags_flat
+  ].join(",");
+
+  try {
+    const response = await fetch("http://rokoserveris.gw.lt:8080/", {
+      method: "POST",
+      headers: { "Content-Type": "text/csv" },
+      body: game_data
+    });
+
+    if (response.ok) {
+      alert("Score submitted successfully!");
+      await close_modal();
+    } else {
+      throw new Error("Failed to submit score");
+    }
+  } catch (error) {
+    alert("Error submitting score. Please try again.");
+    console.error("Error:", error);
+  }
+};
+
+let game = create_minesweeper();
     </script>
   </body>
 </html>
