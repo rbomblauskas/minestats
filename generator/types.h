@@ -5,10 +5,11 @@
 
 #define MAX_IP_LENGTH 16
 #define MAX_FILE_PATH_SIZE 255
-#define BOARD_SIZE 81
 #define MAX_PLAYERS 1000
 #define MAX_MATCHES 10000
 #define FIELD_NUM 250
+#define BOARD_SIZE 9
+#define BOARD_CELL_COUNT BOARD_SIZE*BOARD_SIZE
 
 typedef struct
 {
@@ -27,9 +28,9 @@ typedef struct
     int boardSize;
     float minePercentage;
     char timestamp[25];
-    bool boardFlat[BOARD_SIZE];
-    bool revealedFlat[BOARD_SIZE];
-    bool flagsFlat[BOARD_SIZE];
+    bool boardFlat[BOARD_CELL_COUNT];
+    bool revealedFlat[BOARD_CELL_COUNT];
+    bool flagsFlat[BOARD_CELL_COUNT];
 } MatchStats;
 
 typedef struct

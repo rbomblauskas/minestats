@@ -128,7 +128,7 @@ void write_match_board_page(FILE *html_file, MatchStats *match, int match_num)
     h1_gen_format(html_file, "gameboard-title", "Match #%d - %s", match_num, match->gameWon ? "Won" : "Lost");
 
     // Create the board
-    generate_game_board(html_file, match->boardFlat, match->revealedFlat, match->flagsFlat, (int)sqrt(BOARD_SIZE));
+    generate_game_board(html_file, match->boardFlat, match->revealedFlat, match->flagsFlat, BOARD_SIZE);
 
     div_end(html_file);
     html_document_end(html_file);

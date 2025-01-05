@@ -21,7 +21,7 @@ void add_match(bool game_won, int board_size, float mine_percentage, const char 
     strncpy(new_match->timestamp, timestamp, sizeof(new_match->timestamp) - 1);
     new_match->timestamp[sizeof(new_match->timestamp) - 1] = '\0';
 
-    memcpy(new_match->boardFlat, board_flat, BOARD_SIZE * sizeof(bool));
-    memcpy(new_match->revealedFlat, revealed_flat, BOARD_SIZE * sizeof(bool));
-    memcpy(new_match->flagsFlat, flags_flat, BOARD_SIZE * sizeof(bool));
+    memcpy(new_match->boardFlat, board_flat, BOARD_CELL_COUNT * sizeof(bool));
+    memcpy(new_match->revealedFlat, revealed_flat, BOARD_CELL_COUNT * sizeof(bool));
+    memcpy(new_match->flagsFlat, flags_flat, BOARD_CELL_COUNT * sizeof(bool));
 }
