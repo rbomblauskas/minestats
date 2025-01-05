@@ -1,6 +1,6 @@
 # Minestats
 
-This module analyses Minesweeper matches saved in CSV format, and generates `leaderboard.html`.
+This module analyses Minesweeper matches saved in CSV format, and generates `leaderboard.html`, `matches.html` and individual match pages.
 
 Test it here: http://rokoserveris.gw.lt/
 
@@ -35,8 +35,14 @@ make
 This will compile an executable file (./gen).
 
 ### Usage
-
-To generate the `leaderboard.html` file, simply run (in `generator` directory):
+Run in `generator` directory:
 ```bash
-./gen matches.csv ../frontend/leaderboard.html
+# Generate both matches and leaderboard
+./gen <matches.csv> <output_directory>
+
+# Generate matches only
+./gen -m <matches.csv> <output_location>
+
+# Generate leaderboard only
+./gen -l <matches.csv> <output_location>
 ```
