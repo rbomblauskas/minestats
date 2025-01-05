@@ -46,3 +46,7 @@ Run in `generator` directory:
 # Generate leaderboard only
 ./gen -l <matches.csv> <output_location>
 ```
+Example usage:
+```bash
+./gen matches.csv ../frontend
+```
