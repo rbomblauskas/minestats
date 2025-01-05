@@ -61,7 +61,9 @@ int main(int argc, char *argv[])
 
     if (generate_leaderboard)
     {
-        generate_leaderboard_html(output_location);
+        char leaderboard_path[MAX_FILE_PATH_SIZE];
+        snprintf(leaderboard_path, sizeof(leaderboard_path), "%s/leaderboard.html", output_location);
+        generate_leaderboard_html(leaderboard_path);
     }
 
     if (generate_matches)
