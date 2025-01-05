@@ -126,7 +126,7 @@ void write_cell_with_board_content(FILE *html_file, bool is_bomb, bool is_flag, 
     {
         if (mine_count > 0)
         {
-            table_cell_format(html_file, "revealed number%d", ALIGN_CENTER, "%d", mine_count);
+            table_cell_format(html_file, "revealed", ALIGN_CENTER, "%d", mine_count);
         }
         else
         {
