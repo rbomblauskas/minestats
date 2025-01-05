@@ -294,67 +294,6 @@ void table_cell_number(FILE *fp, double number, int decimals, const char *css_cl
     table_cell(fp, number_str, css_class, align);
 }
 
-void table_cell_with_board_content(FILE *fp, bool is_bomb, bool is_flag, bool is_revealed, int mine_count)
-{
-    if (is_flag)
-    {
-        table_cell(fp, "\xF0\x9F\x9A\xA9", "flag", ALIGN_CENTER);
-    }
-    else if (is_bomb)
-    {
-        table_cell(fp, "\xF0\x9F\x92\xA3", "mine", ALIGN_CENTER);
-    }
-    else if (is_revealed)
-    {
-        if (mine_count > 0)
-        {
-            table_cell_format(fp, "revealed number%d", ALIGN_CENTER, "%d", mine_count);
-        }
-        else
-        {
-            table_cell(fp, "", "revealed", ALIGN_CENTER);
-        }
-    }
-    else
-    {
-        table_cell(fp, "", "unrevealed", ALIGN_CENTER);
-    }
-}
-
-void generate_game_board(FILE *fp, const bool *board_flat, const bool *revealed_flat, const bool *flags_flat, int size)
-{
-    TableConfig boardConfig = {"gameBoard", NULL, NULL, false, false, false};
-    table_begin(fp, &boardConfig);
-    for (int i = 0; i < size; i++)
-    {
-        fprintf(fp, "<tr>\n");
-        for (int j = 0; j < size; j++)
-        {
-            int index = i * size + j;
-            int mine_count = 0;
-            if (revealed_flat[index])
-            {
-                for (int di = -1; di <= 1; di++)
-                {
-                    for (int dj = -1; dj <= 1; dj++)
-                    {
-                        int ni = i + di;
-                        int nj = j + dj;
-                        if (ni >= 0 && ni < size && nj >= 0 && nj < size)
-                        {
-                            if (board_flat[ni * size + nj])
-                                mine_count++;
-                        }
-                    }
-                }
-            }
-            table_cell_with_board_content(fp, board_flat[index], flags_flat[index], revealed_flat[index], mine_count);
-        }
-        table_row_end(fp);
-    }
-    table_end(fp);
-}
-
 void table_row_end(FILE *fp)
 {
     if (!fp)

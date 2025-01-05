@@ -85,12 +85,6 @@ void table_cell_format(FILE *fp, const char *css_class, ColumnAlignment align, c
 // Write a cell with numeric content
 void table_cell_number(FILE *fp, double number, int decimals, const char *css_class, ColumnAlignment align);
 
-// Write a cell with board content
-void table_cell_with_board_content(FILE *fp, bool is_bomb, bool is_flag, bool is_revealed, int mine_count);
-
-// Function to generate a game board
-void generate_game_board(FILE *fp, const bool *board_flat, const bool *revealed_flat, const bool *flags_flat, int size);
-
 // End current table row
 void table_row_end(FILE *fp);
 
