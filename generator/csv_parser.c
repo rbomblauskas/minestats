@@ -76,8 +76,8 @@ void cb_row(int columnCount, void *data)
 {
     if (tempPlayer && tempMatch && fieldIndex == FIELD_NUM)
     {
-        update_player_stats(tempPlayer->ipAddress, tempPlayer->playerName, tempPlayer->elapsedSeconds, tempPlayer->lastPlayed, tempMatch->gameWon);
-        add_match(tempMatch->gameWon, tempMatch->boardSize, tempMatch->minePercentage, tempMatch->timestamp, tempMatch->boardFlat, tempMatch->revealedFlat, tempMatch->flagsFlat);
+        update_player_stats(tempPlayer, tempMatch);
+        add_match(tempPlayer, tempMatch);
     }
     else
     {

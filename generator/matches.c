@@ -5,7 +5,7 @@
 
 MatchData matchData = {0};
 
-void add_match(bool game_won, int board_size, float mine_percentage, const char *timestamp, bool *board_flat, bool *revealed_flat, bool *flags_flat)
+void add_match(const PlayerStats *player, const MatchStats *match)
 {
     if (matchData.matchCount >= MAX_MATCHES)
     {
@@ -14,14 +14,14 @@ void add_match(bool game_won, int board_size, float mine_percentage, const char 
     }
 
     MatchStats *new_match = &matchData.matches[matchData.matchCount++];
-    new_match->gameWon = game_won;
-    new_match->boardSize = board_size;
-    new_match->minePercentage = mine_percentage;
+    new_match->gameWon = match->gameWon;
+    new_match->boardSize = match->boardSize;
+    new_match->minePercentage = match->minePercentage;
 
-    strncpy(new_match->timestamp, timestamp, sizeof(new_match->timestamp) - 1);
+    strncpy(new_match->timestamp, match->timestamp, sizeof(new_match->timestamp) - 1);
     new_match->timestamp[sizeof(new_match->timestamp) - 1] = '\0';
 
-    memcpy(new_match->boardFlat, board_flat, BOARD_CELL_COUNT * sizeof(bool));
-    memcpy(new_match->revealedFlat, revealed_flat, BOARD_CELL_COUNT * sizeof(bool));
-    memcpy(new_match->flagsFlat, flags_flat, BOARD_CELL_COUNT * sizeof(bool));
+    memcpy(new_match->boardFlat, match->boardFlat, BOARD_CELL_COUNT * sizeof(bool));
+    memcpy(new_match->revealedFlat, match->revealedFlat, BOARD_CELL_COUNT * sizeof(bool));
+    memcpy(new_match->flagsFlat, match->flagsFlat, BOARD_CELL_COUNT * sizeof(bool));
 }

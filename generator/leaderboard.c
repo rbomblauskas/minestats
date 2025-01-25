@@ -4,25 +4,25 @@
 
 LeaderboardData leaderboard = {0};
 
-void update_player_stats(const char *ipAddress, const char *playerName, int elapsedSeconds, const char *timestamp, bool gameWon)
+void update_player_stats(const PlayerStats *player, const MatchStats *match)
 {
     // Randame esantį žaidėją
     for (int i = 0; i < leaderboard.playerCount; i++)
     {
 
-        if (strcmp(leaderboard.players[i].ipAddress, ipAddress) == 0)
+        if (strcmp(leaderboard.players[i].ipAddress, player->ipAddress) == 0)
         {
             // Naudojame paskutinį nurodytą žaidėjo vardą
-            strncpy(leaderboard.players[i].playerName, playerName, sizeof(leaderboard.players[i].playerName) - 1);
+            strncpy(leaderboard.players[i].playerName, player->playerName, sizeof(leaderboard.players[i].playerName) - 1);
             // Atnaujiname statistiką, jei laikas geresnis
-            if (elapsedSeconds < leaderboard.players[i].elapsedSeconds && gameWon)
+            if (player->elapsedSeconds < leaderboard.players[i].elapsedSeconds && match->gameWon)
             {
-                leaderboard.players[i].elapsedSeconds = elapsedSeconds;
+                leaderboard.players[i].elapsedSeconds = player->elapsedSeconds;
             }
-            leaderboard.players[i].gamesWon += gameWon ? 1 : 0;
+            leaderboard.players[i].gamesWon += match->gameWon ? 1 : 0;
             leaderboard.players[i].gamesPlayed++;
             leaderboard.players[i].winRate = ((float)leaderboard.players[i].gamesWon / leaderboard.players[i].gamesPlayed) * 100.0f;
-            strncpy(leaderboard.players[i].lastPlayed, timestamp, sizeof(leaderboard.players[i].lastPlayed) - 1);
+            strncpy(leaderboard.players[i].lastPlayed, player->lastPlayed, sizeof(leaderboard.players[i].lastPlayed) - 1);
             return;
         }
     }
@@ -34,12 +34,12 @@ void update_player_stats(const char *ipAddress, const char *playerName, int elap
     }
     // Pridedame naują žaidėją
     int i = leaderboard.playerCount;
-    strcpy(leaderboard.players[i].ipAddress, ipAddress);
-    leaderboard.players[i].elapsedSeconds = gameWon ? elapsedSeconds : 1000000000;
-    leaderboard.players[i].gamesWon = gameWon ? 1 : 0;
+    strcpy(leaderboard.players[i].ipAddress, player->ipAddress);
+    leaderboard.players[i].elapsedSeconds = match->gameWon ? player->elapsedSeconds : 1000000000;
+    leaderboard.players[i].gamesWon = match->gameWon ? 1 : 0;
     leaderboard.players[i].gamesPlayed = 1;
     leaderboard.players[i].winRate = leaderboard.players[i].gamesWon * 100.0f;
-    strcpy(leaderboard.players[i].lastPlayed, timestamp);
+    strcpy(leaderboard.players[i].lastPlayed, player->lastPlayed);
     leaderboard.playerCount++;
 }
 
