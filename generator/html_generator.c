@@ -40,6 +40,7 @@ void write_leaderboard_html_body(FILE *html_file)
 void write_player_data(FILE *html_file, int rank, PlayerStats *player)
 {
     table_cell_format(html_file, NULL, ALIGN_CENTER, "<span class=\"rank\">%d</span>", rank);
+
     table_cell(html_file, player->playerName, "player-name", ALIGN_LEFT);
 
     if (player->gamesWon == 0)
@@ -54,7 +55,7 @@ void write_player_data(FILE *html_file, int rank, PlayerStats *player)
 
     table_cell_format(html_file, NULL, ALIGN_LEFT, "%.1f%%", player->winRate);
 
-    table_cell(html_file, player->lastPlayed, NULL, ALIGN_LEFT);
+    table_cell(html_file, format_timestamp(player->lastPlayed), NULL, ALIGN_LEFT);
 
     table_row_end(html_file);
 }
@@ -106,7 +107,7 @@ void write_matches_data(FILE *html_file, int match_num, MatchStats *match)
     table_cell_number(html_file, match->boardSize, 0, NULL, ALIGN_LEFT);
 
     table_cell_format(html_file, NULL, ALIGN_LEFT, "%.1f%%", match->minePercentage);
-    table_cell(html_file, match->timestamp, NULL, ALIGN_LEFT);
+    table_cell(html_file, format_timestamp(match->timestamp), NULL, ALIGN_LEFT);
     table_cell_format(html_file, NULL, ALIGN_LEFT, "<a href='match%d.html' class='board-button'>View Board</a>", match_num);
 
     table_row_end(html_file);

@@ -339,6 +339,18 @@ void list_end(FILE *fp)
     fprintf(fp, "</ul>\n");
 }
 
+char *format_timestamp(const char *iso_timestamp)
+{
+    static char formatted_time[20];
+    char year[5], month[3], day[3], hour[3], minute[3], second[3];
+
+    sscanf(iso_timestamp, "%4s-%2s-%2sT%2s:%2s:%2s", year, month, day, hour, minute, second);
+
+    snprintf(formatted_time, sizeof(formatted_time), "%s-%s-%s %s:%s:%s", year, month, day, hour, minute, second);
+
+    return formatted_time;
+}
+
 char *html_escape(const char *input)
 {
     if (!input)

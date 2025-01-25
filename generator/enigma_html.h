@@ -100,7 +100,10 @@ void list_end(FILE *fp);
 // Write a list item with text content
 void list_item(FILE *fp, const char *content, const char *css_class);
 
-// Escape HTML special characters in a string. It is the programmer's responsibility to free the return value.
+// Converts an ISO 8601 timestamp to a human-readable format. The result does not need to be freed.
+char *format_timestamp(const char *iso_timestamp);
+
+// Escape HTML special characters in a string. Caller must free the result.
 char *html_escape(const char *input);
 
 #endif
