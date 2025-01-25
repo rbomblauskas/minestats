@@ -4,3 +4,5 @@
 gen
 server
 ./vscode/*
+frontend/leaderboard.html
+frontend/match*.html

@@ -24,7 +24,7 @@ void write_leaderboard_html_body(FILE *html_file)
 
     TableColumn columns[] = {
         {"Rank", NULL, ALIGN_LEFT},
-        {"IP Address", NULL, ALIGN_LEFT},
+        {"Name", NULL, ALIGN_LEFT},
         {"Best Time", NULL, ALIGN_LEFT},
         {"Games Won", NULL, ALIGN_LEFT},
         {"Win Rate", NULL, ALIGN_LEFT},
@@ -40,7 +40,7 @@ void write_leaderboard_html_body(FILE *html_file)
 void write_player_data(FILE *html_file, int rank, PlayerStats *player)
 {
     table_cell_format(html_file, NULL, ALIGN_CENTER, "<span class=\"rank\">%d</span>", rank);
-    table_cell(html_file, player->ipAddress, "ip-address", ALIGN_LEFT);
+    table_cell(html_file, player->playerName, "player-name", ALIGN_LEFT);
 
     if (player->gamesWon == 0)
     {

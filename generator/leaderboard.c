@@ -4,13 +4,16 @@
 
 LeaderboardData leaderboard = {0};
 
-void update_player_stats(const char *ipAddress, int elapsedSeconds, const char *timestamp, bool gameWon)
+void update_player_stats(const char *ipAddress, const char *playerName, int elapsedSeconds, const char *timestamp, bool gameWon)
 {
     // Randame esantį žaidėją
     for (int i = 0; i < leaderboard.playerCount; i++)
     {
+
         if (strcmp(leaderboard.players[i].ipAddress, ipAddress) == 0)
         {
+            // Naudojame paskutinį nurodytą žaidėjo vardą
+            strncpy(leaderboard.players[i].playerName, playerName, sizeof(leaderboard.players[i].playerName) - 1);
             // Atnaujiname statistiką, jei laikas geresnis
             if (elapsedSeconds < leaderboard.players[i].elapsedSeconds && gameWon)
             {
@@ -19,7 +22,7 @@ void update_player_stats(const char *ipAddress, int elapsedSeconds, const char *
             leaderboard.players[i].gamesWon += gameWon ? 1 : 0;
             leaderboard.players[i].gamesPlayed++;
             leaderboard.players[i].winRate = ((float)leaderboard.players[i].gamesWon / leaderboard.players[i].gamesPlayed) * 100.0f;
-            strcpy(leaderboard.players[i].lastPlayed, timestamp);
+            strncpy(leaderboard.players[i].lastPlayed, timestamp, sizeof(leaderboard.players[i].lastPlayed) - 1);
             return;
         }
     }
