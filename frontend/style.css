@@ -189,75 +189,6 @@ nav.navbar {
   }
 }
 
-#gameBoard td[textContent="1"] {
-  color: #2980b9;
-}
-
-#gameBoard td[textContent="2"] {
-  color: #27ae60;
-}
-
-#gameBoard td[textContent="3"] {
-  color: #c0392b;
-}
-
-#gameBoard td[textContent="4"] {
-  color: #8e44ad;
-}
-
-#gameBoard td[textContent="5"] {
-  color: #d35400;
-}
-
-#gameBoard td[textContent="6"] {
-  color: #16a085;
-}
-
-#gameBoard td[textContent="7"] {
-  color: #2c3e50;
-}
-
-#gameBoard td[textContent="8"] {
-  color: #7f8c8d;
-}
-
-@media (max-width: 768px) {
-  #gameBoard td {
-    width: 20px;
-    height: 20px;
-    font-size: 1rem;
-  }
-
-  .navbar {
-    padding: 0.5rem;
-  }
-
-  .navbar-links {
-    gap: 1rem;
-  }
-
-  #game-status {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  #gameBoard td {
-    width: 20px;
-    height: 20px;
-    font-size: 0.9rem;
-  }
-
-  .navbar-logo {
-    font-size: 1.5rem;
-  }
-
-  .navbar-links a {
-    font-size: 1rem;
-  }
-}
-
-/* Leaderboard Styles */
 .leaderboard-container {
   max-width: 1200px;
   margin: 100px auto 0;
@@ -338,49 +269,6 @@ nav.navbar {
   color: white;
   border-radius: 50%;
   font-weight: bold;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .leaderboard-container {
-    margin: 80px 1rem 0;
-    padding: 1rem;
-  }
-
-  .leaderboard-title {
-    font-size: 2rem;
-  }
-
-  .tab-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .leaderboard-table th,
-  .leaderboard-table td {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .rank {
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .difficulty-tabs {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .leaderboard-table th,
-  .leaderboard-table td {
-    padding: 0.5rem 0.25rem;
-    font-size: 0.8rem;
-  }
 }
 
 #game-status {
