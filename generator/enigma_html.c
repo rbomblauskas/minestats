@@ -342,11 +342,14 @@ void list_end(FILE *fp)
 char *format_timestamp(const char *iso_timestamp)
 {
     static char formatted_time[20];
-    char year[5], month[3], day[3], hour[3], minute[3], second[3];
+    int year, month, day, hour, minute, second;
 
-    sscanf(iso_timestamp, "%4s-%2s-%2sT%2s:%2s:%2s", year, month, day, hour, minute, second);
+    if (sscanf(iso_timestamp, "%4d-%2d-%2dT%2d:%2d:%2d", &year, &month, &day, &hour, &minute, &second) != 6)
+    {
+        return "Invalid";
+    }
 
-    snprintf(formatted_time, sizeof(formatted_time), "%s-%s-%s %s:%s:%s", year, month, day, hour, minute, second);
+    snprintf(formatted_time, sizeof(formatted_time), "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
 
     return formatted_time;
 }
