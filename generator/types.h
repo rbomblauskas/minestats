@@ -24,6 +24,8 @@ typedef struct
 
 typedef struct
 {
+    char ipAddress[16];
+    char playerName[50];
     bool gameWon;
     int boardSize;
     float minePercentage;

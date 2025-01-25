@@ -33,9 +33,11 @@ void cb_field(void *field, size_t field_len, void *data)
     switch (fieldIndex)
     {
     case FIELD_IP_ADDRESS:
+        strncpy(tempMatch->ipAddress, buffer, sizeof(tempMatch->ipAddress) - 1);
         strncpy(tempPlayer->ipAddress, buffer, sizeof(tempPlayer->ipAddress) - 1);
         break;
     case FIELD_PLAYER_NAME:
+        strncpy(tempMatch->playerName, buffer, sizeof(tempMatch->playerName) - 1);
         strncpy(tempPlayer->playerName, buffer, sizeof(tempPlayer->playerName) - 1);
         break;
     case FIELD_ELAPSED_SECONDS:

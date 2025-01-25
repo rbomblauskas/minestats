@@ -88,8 +88,7 @@ void write_matches_html_body(FILE *html_file)
 
     TableColumn columns[] = {
         {"Game Won", NULL, ALIGN_LEFT},
-        {"Board Size", NULL, ALIGN_LEFT},
-        {"Mine Percentage", NULL, ALIGN_LEFT},
+        {"Name", NULL, ALIGN_LEFT},
         {"Time Stamp", NULL, ALIGN_LEFT},
         {"View Board", NULL, ALIGN_LEFT},
     };
@@ -104,9 +103,7 @@ void write_matches_html_body(FILE *html_file)
 void write_matches_data(FILE *html_file, int match_num, MatchStats *match)
 {
     table_cell(html_file, match->gameWon ? "Won" : "Lost", NULL, ALIGN_LEFT);
-    table_cell_number(html_file, match->boardSize, 0, NULL, ALIGN_LEFT);
-
-    table_cell_format(html_file, NULL, ALIGN_LEFT, "%.1f%%", match->minePercentage);
+    table_cell(html_file, match->playerName, NULL, ALIGN_LEFT);
     table_cell(html_file, format_timestamp(match->timestamp), NULL, ALIGN_LEFT);
     table_cell_format(html_file, NULL, ALIGN_LEFT, "<a href='match%d.html' class='board-button'>View Board</a>", match_num);
 
@@ -151,7 +148,6 @@ void write_game_board(FILE *html_file, const bool *board_flat, const bool *revea
         {
             int index = i * size + j;
             int mine_count = 0;
-            // TODO: seperate this loop into it's own function.
             if (revealed_flat[index])
             {
                 for (int di = -1; di <= 1; di++)

@@ -18,6 +18,8 @@ void add_match(const PlayerStats *player, const MatchStats *match)
     new_match->boardSize = match->boardSize;
     new_match->minePercentage = match->minePercentage;
 
+    strncpy(new_match->ipAddress, match->ipAddress, sizeof(new_match->ipAddress) - 1);
+    strncpy(new_match->playerName, match->playerName, sizeof(new_match->playerName) - 1);
     strncpy(new_match->timestamp, match->timestamp, sizeof(new_match->timestamp) - 1);
     new_match->timestamp[sizeof(new_match->timestamp) - 1] = '\0';
 
