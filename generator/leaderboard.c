@@ -34,6 +34,7 @@ void update_player_stats(const PlayerStats *player, const MatchStats *match)
     }
     // Pridedame naują žaidėją
     int i = leaderboard.playerCount;
+    strncpy(leaderboard.players[i].playerName, player->playerName, sizeof(leaderboard.players[i].playerName) - 1);
     strcpy(leaderboard.players[i].ipAddress, player->ipAddress);
     leaderboard.players[i].elapsedSeconds = match->gameWon ? player->elapsedSeconds : 1000000000;
     leaderboard.players[i].gamesWon = match->gameWon ? 1 : 0;
